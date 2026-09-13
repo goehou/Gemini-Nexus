@@ -1,5 +1,6 @@
 import { generateUUID } from '../../shared/utils/index.js';
 import { WEB_CLIENT_CAPABILITIES, assertAuthToken } from './shared/web_auth.js';
+import { withFetchTimeout } from './shared/fetch_timeout.js';
 
 const TTS_RPC_ID = 'XqA3Ic';
 const TTS_AUDIO_FORMAT_OGG = 2;
@@ -46,9 +47,10 @@ function buildRequestBody(text, locale, atValue, audioFormat = TTS_AUDIO_FORMAT_
 }
 
 function getBatchJsonLine(responseText) {
-    return String(responseText || '')
-        .split('\n')
-        .find((line) => line.startsWith('[['));
+    const text = String(responseText || '');
+    // batchexecute 标准前缀是 )]}'\n[[... 需兼容
+    const cleaned = text.replace(/^\)\]\}'\n?/, '');
+    return cleaned.split('\n').find((line) => line.trim().startsWith('[['));
 }
 
 function parseTtsBatchResponse(responseText) {
@@ -110,22 +112,28 @@ export async function fetchGeminiTtsAudio(text, context, options = {}) {
         headers['X-Goog-AuthUser'] = context.authUser;
     }
 
-    const response = await fetch(endpoint, {
-        method: 'POST',
-        credentials: 'include',
-        headers,
-        body: buildRequestBody(normalizedText, locale, context.atValue, audioFormat),
-    });
+    const requestTimeout = withFetchTimeout(options.signal);
+    try {
+        const response = await fetch(endpoint, {
+            method: 'POST',
+            credentials: 'include',
+            headers,
+            body: buildRequestBody(normalizedText, locale, context.atValue, audioFormat),
+            signal: requestTimeout.signal,
+        });
 
-    if (!response.ok) {
-        throw new Error(`Gemini TTS network error: ${response.status} ${response.statusText}`);
+        if (!response.ok) {
+            throw new Error(`Gemini TTS network error: ${response.status} ${response.statusText}`);
+        }
+
+        return {
+            audioBase64: parseTtsBatchResponse(await response.text()),
+            mimeType: audioFormat === TTS_AUDIO_FORMAT_OGG ? 'audio/ogg' : 'audio/mpeg',
+            locale,
+        };
+    } finally {
+        requestTimeout.dispose();
     }
-
-    return {
-        audioBase64: parseTtsBatchResponse(await response.text()),
-        mimeType: audioFormat === TTS_AUDIO_FORMAT_OGG ? 'audio/ogg' : 'audio/mpeg',
-        locale,
-    };
 }
 
 export const GeminiTtsInternals = {

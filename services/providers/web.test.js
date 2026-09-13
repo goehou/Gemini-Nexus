@@ -46,7 +46,7 @@ describe('sendWebMessage', () => {
         const response = await sendWebMessage(
             '只回复 PROJECT_OK',
             context,
-            'fbb127bbb056c959',
+            '56fdd199312815e2',
             [],
             undefined
         );
@@ -67,9 +67,9 @@ describe('sendWebMessage', () => {
         expect(init.headers['x-goog-ext-73010990-jspb']).toBe('[0,0,0]');
         expect(init.headers['x-goog-ext-525005358-jspb']).toMatch(/^\["[0-9A-F-]{36}",1\]$/);
         const modelHeader = JSON.parse(init.headers['x-goog-ext-525001261-jspb']);
-        expect(modelHeader[4]).toBe('fbb127bbb056c959');
-        expect(modelHeader[8]).toEqual([4, 5, 6, 8]);
-        expect(modelHeader[11]).toBe(1);
+        expect(modelHeader[4]).toBe('56fdd199312815e2');
+        expect(modelHeader[8]).toEqual([4, 5, 6, 8, 4, 5, 6, 8]);
+        expect(modelHeader[11]).toBe(2);
         expect(modelHeader[14]).toBe(1);
         expect(modelHeader[15]).toBe(1);
         expect(modelHeader[16]).toMatch(/^[0-9A-F-]{36}$/);
@@ -83,7 +83,7 @@ describe('sendWebMessage', () => {
         expect(modelHeader[7]).toBe(0);
     });
 
-    it('uses the captured Gemini 3.7 Flash Web model contract', async () => {
+    it('uses the captured Gemini 3.8 Flash Web model contract', async () => {
         global.fetch = vi.fn().mockResolvedValue({
             ok: true,
             body: makeStream(buildGeminiLine()),
@@ -160,7 +160,7 @@ describe('sendWebMessage', () => {
                 locale: 'zh-CN',
                 authUser: '0',
             },
-            'fbb127bbb056c959',
+            '56fdd199312815e2',
             [],
             undefined,
             undefined,

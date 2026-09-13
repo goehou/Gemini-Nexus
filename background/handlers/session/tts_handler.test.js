@@ -78,4 +78,17 @@ describe('TtsHandler', () => {
             error: 'TTS failed',
         });
     });
+
+    it('always responds even when error shaping itself throws', async () => {
+        sessionManager.ensureInitialized.mockRejectedValue(null);
+        const sendResponse = vi.fn();
+
+        expect(handler.handle({ action: 'GEMINI_TTS', text: 'Hello' }, sendResponse)).toBe(true);
+        await vi.waitFor(() => expect(sendResponse).toHaveBeenCalledTimes(1));
+
+        expect(sendResponse.mock.calls[0][0]).toMatchObject({
+            action: 'GEMINI_TTS_RESULT',
+            status: 'error',
+        });
+    });
 });
