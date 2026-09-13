@@ -16,8 +16,8 @@ import { DEFAULT_NOAUTH_MODEL } from '../../shared/config/constants.js';
 // MODE_CATEGORY enum from Gemini frontend JS (gemini-web2api models.py):
 // 1=FAST 2=THINKING 3=PRO 4=AUTO 5=FAST_DYNAMIC_THINKING 6=FLASH_LITE
 const MODELS = Object.freeze({
+    'gemini-3.8-flash': Object.freeze({ mode: 1, think: 4 }),
     'gemini-3.7-flash': Object.freeze({ mode: 1, think: 4 }),
-    'gemini-3.6-flash': Object.freeze({ mode: 1, think: 4 }),
     'gemini-3.5-flash': Object.freeze({ mode: 1, think: 4 }),
     'gemini-3.5-flash-thinking': Object.freeze({ mode: 2, think: 0 }),
     'gemini-3.1-pro': Object.freeze({ mode: 3, think: 4 }),

@@ -14,7 +14,7 @@ describe('connection settings helpers', () => {
         expect(createConnectionSettingsPayload({})).toEqual({
             provider: 'web',
             useOfficialApi: false,
-            selectedModel: 'fbb127bbb056c959',
+            selectedModel: '56fdd199312815e2',
             webThinkingLevel: 'minimal',
             webTemporaryChat: false,
             openaiSelectedModel: '',
@@ -124,8 +124,8 @@ describe('connection settings helpers', () => {
         expect(getConnectionProvider({})).toBe('web');
         expect(getSelectedModelForProvider({}, 'openai')).toBe('openai_custom');
         expect(getSelectedModelForProvider({}, 'deepseek')).toBe('deepseek-v4-pro');
-        expect(getSelectedModelForProvider({}, 'gemini_noauth')).toBe('gemini-3.7-flash');
-        expect(getSelectedModelForProvider({}, 'web')).toBe('fbb127bbb056c959');
+        expect(getSelectedModelForProvider({}, 'gemini_noauth')).toBe('gemini-3.8-flash');
+        expect(getSelectedModelForProvider({}, 'web')).toBe('56fdd199312815e2');
     });
 
     it('declares the storage keys needed for connection restore', () => {

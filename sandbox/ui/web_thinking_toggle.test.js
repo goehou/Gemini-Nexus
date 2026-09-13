@@ -18,7 +18,7 @@ describe('web thinking toggle UI', () => {
     });
 
     it('defaults Flash to the active fast state when no thinking level is stored', () => {
-        syncWebThinkingToggle(button, { provider: 'web' }, 'fbb127bbb056c959');
+        syncWebThinkingToggle(button, { provider: 'web' }, '56fdd199312815e2');
 
         expect(button.hidden).toBe(false);
         expect(button.classList.contains('is-fast')).toBe(true);
